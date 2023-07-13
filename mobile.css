@@ -13,8 +13,7 @@ body{
     align-items: center;
     gap: 0.6rem;
     position: fixed;
-    top: 0%;
-    scale: 0.8;
+    top: 5%;
 }
 
 .pile {
@@ -41,17 +40,16 @@ body{
     bottom: 2%;
     flex-wrap: wrap;
     top: 60%;
-    width: 180%;
+    width: 100%;
     backdrop-filter: blur(50px);
     z-index: 2;
-    scale: 0.5;
 }
   
 .card {
     background-size: cover;
     background-position: center;
-    height: 300px;
-    width: 200px;
+    height: 150px;
+    width: 100px;
     border-radius: 20px;
     background-color:darkslategray;
   }
@@ -59,8 +57,8 @@ body{
 .card-cpu {
     background-size: cover;
     background-position: center;
-    height: 225px;
-    width: 150px;
+    height: 150px;
+    width: 100px;
     border-radius: 20px;
     background-color:darkslategray;
 }
