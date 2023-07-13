@@ -13,7 +13,8 @@ body{
     align-items: center;
     gap: 0.6rem;
     position: fixed;
-    top: 3%;
+    top: 0%;
+    scale: 0.8;
 }
 
 .pile {
@@ -40,9 +41,10 @@ body{
     bottom: 2%;
     flex-wrap: wrap;
     top: 60%;
-    width: 100%;
+    width: 180%;
     backdrop-filter: blur(50px);
     z-index: 2;
+    scale: 0.5;
 }
   
 .card {
@@ -65,8 +67,8 @@ body{
 
 .console {
     position: fixed;
-    width: 20%;
-    left: 15%;
+    width: 24%;
+    left: 1%;
     top: 33%;
     font: message-box;
     font-family: system-ui;
@@ -81,7 +83,7 @@ body{
 .multiplier{
     position: fixed;
     width: 50px;
-    right: 30%;
+    right: 10%;
     top: 33%;
     font: revert;
     font-family: system-ui;
@@ -98,11 +100,11 @@ body{
 
 #playerBtn {
     position: fixed;
-    width: 150px;
+    width: 100px;
     height: 50px;
-    left: 15%;
-    top: 45%;
-    font-size: xx-large;
+    right: 1%;
+    top: 50%;
+    font-size: x-large;
     color: white;
     background: orangered;
     border: none;

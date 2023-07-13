@@ -1,3 +1,19 @@
+function setStyleSheet(url){
+        var stylesheet = document.getElementById("stylesheet");
+        stylesheet.setAttribute('href', url);
+}
+
+
+width = window.innerWidth;
+if (width < 701) {
+        setStyleSheet('mobile.css');
+} else if (width < 1300) {
+        setStyleSheet('tablet.css');
+} else { 
+        setStyleSheet('styles.css');
+}
+
+
 class Queue {
         constructor() {
           this.elements = {};
@@ -34,7 +50,7 @@ const multiplierBox = document.querySelector('.multiplier');
 const playerButton = document.getElementById('playerBtn');
 playerButton.addEventListener('click', playerButtonPressed);
 
-const startAmount = 4;
+const startAmount = 5;
 
 let playerTurn = 1;
 PlayerWon = 0;
@@ -354,7 +370,7 @@ function decideCpu() {
         }
         playerTurn = 1;
 
-        //console.log(CpuCards);
+        console.log(CpuCards);
 }
 
 function randomBetween(min, max) { // min and max included 
@@ -717,8 +733,51 @@ function respondAttack(type) {
                         return false;
                 break;
                 case "cowboy":
-                        messageBox.innerHTML = "not implemented yet..";
-                        return false;
+                        if (draw1 > 0){
+                                draw1++;
+                                if (!playerTurn){
+                                        playerButton.innerHTML = "Draw " + draw1; 
+                                }
+                                return true;
+                        }
+                        else if (draw2 > 0){
+                                draw2++;
+                                if (!playerTurn){
+                                        playerButton.innerHTML = "Draw " + draw2 * 2; 
+                                }
+                                return true;
+                        }
+                        else if (show > 0){
+                                show++;
+                                if (!playerTurn){
+                                        playerButton.innerHTML = "Show"; 
+                                }
+                                return true;
+                        }
+                        else if (pick1 > 0){
+                                pick1++;
+                                if (!playerTurn){
+                                        playerButton.innerHTML = "Pick " + pick1; 
+                                }
+                                return true;
+                        }
+                        else if (pick2 > 0){
+                                pick2++;
+                                if (!playerTurn){
+                                        playerButton.innerHTML = "Pick " + pick2 * 2; 
+                                }
+                                return true;
+                        }
+                        else if (pick3 > 0){
+                                pick3++;
+                                if (!playerTurn){
+                                        playerButton.innerHTML = "Pick " + pick3 * 3; 
+                                }
+                                return true;
+                        }
+                        else {
+                                alert("Error CowboyCow implementation");
+                        }
                 break;
                 default:
                         alert("Error Card Type identification...")
@@ -737,11 +796,14 @@ function printMultiplier() {
         }
 }
 
-initialize();
 
 
+//Startscreen
+var startScreen = document.getElementById('startScreen');
+startScreen.style.visibility = 'visible';
+setTimeout(() => {initialize();}, 100); 
 
-
+setTimeout(() => {startScreen.style.visibility = 'hidden';}, 1000); 
 
 
 
