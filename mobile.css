@@ -7,11 +7,16 @@ body{
     background-color: lightblue;
 }
 
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 .card-container-cpu {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0.6rem;
+    gap: 6px;
     position: fixed;
     top: 5%;
 }
@@ -24,7 +29,7 @@ body{
     border-radius: 20px;
     background-color:darkslategray;
     position: fixed;
-    top: 33%;
+    top: 30%;
     border-width: 5px;
     border-color: gray;
     color: slategrey;
@@ -35,7 +40,7 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1rem;
+    gap: 10px;
     position: absolute;
     bottom: 2%;
     flex-wrap: wrap;
@@ -50,7 +55,7 @@ body{
     background-position: center;
     height: 150px;
     width: 100px;
-    border-radius: 20px;
+    border-radius: 16px;
     background-color:darkslategray;
   }
 
@@ -67,7 +72,7 @@ body{
     position: fixed;
     width: 24%;
     left: 1%;
-    top: 33%;
+    top: 30%;
     font: message-box;
     font-family: system-ui;
     color: black;
@@ -81,8 +86,8 @@ body{
 .multiplier{
     position: fixed;
     width: 50px;
-    right: 10%;
-    top: 33%;
+    right: 20%;
+    top: 30%;
     font: revert;
     font-family: system-ui;
     color: white;
@@ -101,7 +106,7 @@ body{
     width: 100px;
     height: 50px;
     right: 1%;
-    top: 50%;
+    top: 45%;
     font-size: large;
     color: white;
     background: orangered;
