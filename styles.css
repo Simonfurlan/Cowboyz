@@ -65,7 +65,7 @@ body{
 .console {
     position: fixed;
     width: 20%;
-    left: 8%;
+    left: 15%;
     top: 33%;
     font: message-box;
     font-family: system-ui;
@@ -97,7 +97,13 @@ body{
 
 #playerBtn {
     position: fixed;
-    width: 9%;
-    left: 8%;
+    width: 150px;
+    height: 50px;
+    left: 15%;
     top: 45%;
+    font-size: xx-large;
+    color: white;
+    background: orangered;
+    border: none;
+    border-radius: 5px;
 }

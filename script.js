@@ -354,12 +354,12 @@ function decideCpu() {
         }
         playerTurn = 1;
 
-        console.log(CpuCards);
+        //console.log(CpuCards);
 }
 
 function randomBetween(min, max) { // min and max included 
         rnd = Math.random();
-        console.log(rnd);
+        //console.log(rnd);
         return Math.floor(rnd * (max - min + 1) + min)
 }      
 
@@ -371,7 +371,7 @@ function drawFromPlayer(amount){
                         //Add Card to Cpu
                         pickCardCpu(rndCard.id);
 
-                        alert("removing: " + rndCard.id);
+                        //alert("removing: " + rndCard.id);
                         //Delete Player Card
                         rndCard.remove();
                 }
@@ -381,7 +381,7 @@ function drawFromPlayer(amount){
                         PlayerWon = 1;
                 }
         }
-        console.log(CpuCards);
+        //console.log(CpuCards);
 }
 
 function takeAttackCpu(){
@@ -446,8 +446,8 @@ function initialize(){
         for (let i = 0; i < startAmount; i++) {
                 pickCardCpu(Pile.dequeue());
         }
-        console.log(CpuCards);
-        console.log(cardContainerCpu.children.length);
+        //console.log(CpuCards);
+        //console.log(cardContainerCpu.children.length);
 }
 
 function checkTime(type) {
