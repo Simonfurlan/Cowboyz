@@ -523,7 +523,7 @@ function checkAttack(type) {
                 return true;
         }
 
-        if (tmpType.includes("yeano")){
+        if (tmpType.includes("yeano") && (!(Pile.peek().includes("yeano")))){
                 return true;
         }
 
