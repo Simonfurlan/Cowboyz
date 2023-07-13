@@ -20,8 +20,8 @@ body{
 .pile {
     background-size: cover;
     background-position: center;
-    height: 225px;
-    width: 150px;
+    height: 150px;
+    width: 100px;
     border-radius: 20px;
     background-color:darkslategray;
     position: fixed;
@@ -104,7 +104,7 @@ body{
     height: 50px;
     right: 1%;
     top: 50%;
-    font-size: x-large;
+    font-size: large;
     color: white;
     background: orangered;
     border: none;
@@ -113,8 +113,9 @@ body{
 
 #startScreen {
     background-color: white;
-    height: 110%;
-    width: 110%;
+    
+    height: 100vh;
+    width: 100vh;
     margin: 0;
     z-index: 3;
     text-align: center;
