@@ -264,6 +264,10 @@ function throwCpu(type) {
         if(deleteItemCpu(type)){
                 Pile.enqueue(type);
                 updatePile();
+                if (cardContainerCpu.children.length == 0){
+                        CpuWon = 1;
+                        messageBox.innerHTML = "Cpu won!";
+                }
                 return true;
         }
         else
