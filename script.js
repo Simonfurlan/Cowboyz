@@ -29,11 +29,16 @@ class Queue {
 const cardContainer = document.querySelector('.card-container');
 const cardContainerCpu = document.querySelector('.card-container-cpu');
 const pileContainer = document.querySelector('.pile');
-const messageBox = document.querySelector('.console')
+const messageBox = document.querySelector('.console'); 
+const multiplierBox = document.querySelector('.multiplier');
+const playerButton = document.getElementById('playerBtn');
+playerButton.addEventListener('click', playerButtonPressed);
 
-const startAmount = 5;
+const startAmount = 4;
 
 let playerTurn = 1;
+PlayerWon = 0;
+CpuWon = 0;
 
 let draw1 = 0;
 let draw2 = 0;
@@ -59,17 +64,122 @@ let CpuCards = [];
 
 // Pick and Throw and Draw
 
+function drawFromCpu(amount){
+        for (let i = 0; i < amount; i++) {
+                if(cardContainerCpu.children.length > 0){
+                        if (CpuCards.length == cardContainerCpu.children.length) {
+                                tmpCard = CpuCards.pop();
+                                pickCard(tmpCard);
+                                cardContainerCpu.removeChild(cardContainerCpu.lastChild);
+                        }
+                        else{
+                                alert("Error Cpu List to Card missmatch CpuCards.length: " + CpuCards.length + " != cardContainerCpu.children.length: " + cardContainerCpu.children.length);
+                        }
+                }
+                else{
+                        messageBox.innerHTML = "Cpu won!";
+                        CpuWon = 1;
+                }
+        }
+        if (CpuCards.length == 0){
+                messageBox.innerHTML = "Cpu won!";
+                CpuWon = 1;
+        }
+}
+
+function playerButtonPressed(){
+
+        if (CpuWon || PlayerWon){
+                return false;
+        }
+
+        if (playerTurn){
+                if ((draw1 + draw2 + show + pick1 + pick2 + pick3) == 0){
+                        //Case: No playable card, pick 1
+                        pickCard(Pile.dequeue());
+                        playerTurn = 0;
+                        messageBox.innerHTML = "Cpu checking...";
+                        setTimeout(() => {decideCpu()}, 2000);        
+                }
+                else{
+                        //Take attack
+                        switch(true) {
+                                case draw1 > 0:
+                                        drawFromCpu(draw1);
+                                        draw1 = 0;
+                                        break;
+                                case draw2 > 0:
+                                        drawFromCpu(draw2 * 2);
+                                        draw2 = 0;
+                                        break;
+                                case show > 0:
+                                        // ToDo
+                                        show = 0;
+                                        break;
+                                case pick1 > 0:
+                                        for (let i = 0; i < pick1; i++) {
+                                                if(!Pile.isEmpty){
+                                                        pickCard(Pile.dequeue());
+                                                }
+                                        }
+                                        pick1 = 0;
+                                        break;
+                                case pick2 > 0:
+                                        for (let i = 0; i < pick2*2; i++) {
+                                                if(!Pile.isEmpty){
+                                                        pickCard(Pile.dequeue());
+                                                }
+                                        }
+                                        pick2 = 0;
+                                        break;
+                                case pick3 > 0:
+                                        for (let i = 0; i < pick3*3; i++) {
+                                                if(!Pile.isEmpty){
+                                                        pickCard(Pile.dequeue());
+                                                }
+                                        }
+                                        pick3 = 0;
+                                        break;
+                                default:
+                                  alert("Error taking attack")
+                        }
+                        playerButton.innerHTML = "Pick 1";
+                        printMultiplier();
+                }
+        }
+        else {
+                messageBox.innerHTML = "Not your turn";
+        }
+}
+
 function pickCard(type) {
+
+        if (PlayerWon){
+                return false;
+        }
+        if (CpuWon){
+                return false;
+        }
+
         const card = document.createElement('div');
         card.classList.add('card');
         card.setAttribute('id', type);
         card.style.backgroundImage = `url(${type}.png)`;
         cardContainer.appendChild(card);
         card.addEventListener('click', function() {
+
+                if (CpuWon){
+                        return false;
+                }
+
                 if (validateTurn(type)){
                         if (cardContainer.children.length > 0) {
                                 throwCard(type);
                                 cardContainer.removeChild(document.getElementById(type));
+
+                                if (cardContainer.children.length == 0){
+                                        PlayerWon = 1;
+                                }
                         }
                 }
         });
@@ -111,15 +221,44 @@ function updatePile() {
         card.classList.add('pile');
         card.style.backgroundImage = `url(${Pile.peek()}.png)`;
         pileContainer.appendChild(card);
+        printMultiplier();
 }
 
 // CPU
 
+function deleteItemCpu(string) {
+        const index = CpuCards.indexOf(string);
+      
+        if (index !== -1) { 
+          const lastElement = CpuCards[CpuCards.length - 1]; 
+          CpuCards[index] = lastElement; 
+          CpuCards.pop();
+          if (cardContainerCpu.children.length > 0) {
+                cardContainerCpu.removeChild(cardContainerCpu.lastChild);
+          }
+        }
+        else {
+            return false;
+        }
+      
+        return true; 
+}
+
 function throwCpu(type) {
+        if(deleteItemCpu(type)){
+                Pile.enqueue(type);
+                updatePile();
+                return true;
+        }
+        else
+        {
+                alert("Cpu thrown Card not found");
+                return false
+        }
 
 }
 
-function checkRespondAttack(type) {
+function checkRespondCard(type) {
         tmpType = extractType(type);
 
         if (draw1 >= 1 && tmpType.includes("draw1") && Pile.peek().includes("draw1")) {
@@ -149,29 +288,56 @@ function checkRespondAttack(type) {
 }
 
 function validateCpu(type){
-        if (!checkRespondAttack(type)){
+        if (!checkRespondCard(type)){
                 return false;
         }
 
         messageBox.innerHTML = "Cpu counters with: " + type;
-
         return true;
 }
 
 function decideCpu() {
-        messageBox.innerHTML = "Cpu time!";
-
+        if (CpuWon){
+                return false;
+        }
 
         if ((draw1 + draw2 + show + pick1 + pick2 + pick3) == 0) {
+                if (cardContainer.children.length == 0){
+                        PlayerWon = 1;
+                        messageBox.innerHTML = "Player won!";
+                        return false;
+                }
                 // Case: no attack
+                let cardFound = 0;
+                for (let i = 0; i < CpuCards.length; i++) {
+                        if (checkAttack(CpuCards[i]) && checkTime(CpuCards[i])) {
+                                if(!initAttack(CpuCards[i])){
+                                        //Case skip
+                                        messageBox.innerHTML = "Cpu throws: " + CpuCards[i];
+                                        throwCpu(CpuCards[i]);
+                                        setTimeout(() => {decideCpu()}, 2000);
+                                        return false;
+                                }
+                                cardFound = 1;
+                                messageBox.innerHTML = "Cpu throws: " + CpuCards[i];
+                                throwCpu(CpuCards[i]);
+                                break;
+                        }
+                }
 
+                if(!cardFound) {
+                        messageBox.innerHTML = "Cpu picks card";
+                        // pick up one
+                        pickCardCpu(Pile.dequeue());
+                }
         }
         else {
-                let cardFound = 0;
                 // Case: respond attack
+                let cardFound = 0;
                 for (let i = 0; i < CpuCards.length; i++) {
                         if (validateCpu(CpuCards[i])) {
-                                throwCpu(CpuCards[i]);
+                                respondAttack(CpuCards[i]);
+                                throwCpu(CpuCards[i])
                                 cardFound = 1;
                                 break;
                         }
@@ -179,12 +345,87 @@ function decideCpu() {
 
                 if(!cardFound) {
                         // take attack
+                        messageBox.innerHTML = "Cpu taking attack";
+                        takeAttackCpu();
+                        setTimeout(() => {decideCpu()}, 2000); //After taking, cpus turn
+                        return false;
                 }
                 
         }
+        playerTurn = 1;
 
+        console.log(CpuCards);
 }
 
+function randomBetween(min, max) { // min and max included 
+        rnd = Math.random();
+        console.log(rnd);
+        return Math.floor(rnd * (max - min + 1) + min)
+}      
+
+function drawFromPlayer(amount){
+        for (let i = 0; i < amount; i++) {
+                if (cardContainer.children.length > 0){
+                        tmpCards = cardContainer.children;
+                        rndCard = tmpCards[randomBetween(0, (tmpCards.length - 1))];
+                        //Add Card to Cpu
+                        pickCardCpu(rndCard.id);
+
+                        alert("removing: " + rndCard.id);
+                        //Delete Player Card
+                        rndCard.remove();
+                }
+                else
+                {
+                        messageBox.innerHTML = "Player won!"
+                        PlayerWon = 1;
+                }
+        }
+        console.log(CpuCards);
+}
+
+function takeAttackCpu(){
+        switch(true) {
+                case draw1 > 0:
+                        drawFromPlayer(draw1);
+                        draw1 = 0;
+                        break;
+                case draw2 > 0:
+                        drawFromPlayer(draw2 * 2);
+                        draw2 = 0;
+                        break;
+                case show > 0:
+                        messageBox.innerHTML = "Cpu has: " + CpuCards;
+                        show = 0;
+                        break;
+                case pick1 > 0:
+                        for (let i = 0; i < pick1; i++) {
+                                if(!Pile.isEmpty){
+                                        pickCardCpu(Pile.dequeue());
+                                }
+                        }
+                        pick1 = 0;
+                        break;
+                case pick2 > 0:
+                        for (let i = 0; i < pick2*2; i++) {
+                                if(!Pile.isEmpty){
+                                        pickCardCpu(Pile.dequeue());
+                                }
+                        }
+                        pick2 = 0;
+                        break;
+                case pick3 > 0:
+                        for (let i = 0; i < pick3*3; i++) {
+                                if(!Pile.isEmpty){
+                                        pickCardCpu(Pile.dequeue());
+                                }
+                        }
+                        pick3 = 0;
+                        break;
+                default:
+                  alert("Error taking attack (Cpu)");
+        }
+}
 
 
 // LOGIC
@@ -206,6 +447,7 @@ function initialize(){
                 pickCardCpu(Pile.dequeue());
         }
         console.log(CpuCards);
+        console.log(cardContainerCpu.children.length);
 }
 
 function checkTime(type) {
@@ -265,6 +507,10 @@ function checkAttack(type) {
                 return true;
         }
 
+        if (tmpType.includes("yeano")){
+                return true;
+        }
+
         if (draw1 >= 1 && tmpType.includes("draw1") && Pile.peek().includes("draw1")) {
                 return true;
         }
@@ -299,134 +545,196 @@ function validateTurn(type){
                 return false;
         }
 
-        if (!checkAttack(type) || ((draw1 + draw2 + show + pick1 + pick2 + pick3)>0)) {
+        if (!checkAttack(type)) {
                 messageBox.innerHTML = "Same TYPE is not allowed!"
                 return false;
         }
 
         if ((draw1 + draw2 + show + pick1 + pick2 + pick3) == 0){
                 // Case: Init attack
-                switch(extractType(type)) {
-                        case "draw1":
-                                draw1++;
-                        break;
-                        case "draw2":
-                                draw2++;
-                        break;
-                        case "show":
-                                show++;
-                        break;
-                        case "yeano":
-                                //Nothing
-                        break;
-                        case "pick1":
-                                pick1++;
-                        break;
-                        case "pick2":
-                                pick2++;
-                        break;
-                        case "pick3":
-                                pick3++;
-                        break;
-                        case "skip":
-                                return true;
-                        break;
-                        case "cowboy":
-                                //Extra later
-                        break;
-                        default:
-                        alert("Error Card Type identification...")
-                }        
+                if (!initAttack(type)) {
+                        return true;
+                }
         }
         else {
-                // Case: Respond attack
-                switch(extractType(type)) {
-                        case "draw1":
-                                if (draw1 > 0){
-                                        draw1++;
-                                        return true;
-                                }
-                                else {
-                                        messageBox.innerHTML = "Cannot send back different attack";
-                                        return false;
-                                }
-                        break;
-                        case "draw2":
-                                if (draw2 > 0){
-                                        draw2++;
-                                        return true;
-                                }
-                                else {
-                                        messageBox.innerHTML = "Cannot send back different attack";
-                                        return false;
-                                }
-                        break;
-                        case "show":
-                                if (show > 0){
-                                        show++;
-                                        return true;
-                                }
-                                else {
-                                        messageBox.innerHTML = "Cannot send back different attack";
-                                        return false;
-                                }
-                        break;
-                        case "yeano":
-                                draw1 = 0;
-                                draw2 = 0;
-                                show = 0;
-                                pick1 = 0;
-                                pick2 = 0;
-                                pick3 = 0;
-                                return true;
-                        break;
-                        case "pick1":
-                                if (pick1 > 0){
-                                        pick1++;
-                                        return true;
-                                }
-                                else {
-                                        messageBox.innerHTML = "Cannot send back different attack";
-                                        return false;
-                                }
-                        break;
-                        case "pick2":
-                                if (pick2 > 0){
-                                        pick2++;
-                                        return true;
-                                }
-                                else {
-                                        messageBox.innerHTML = "Cannot send back different attack";
-                                        return false;
-                                }
-                        break;
-                        case "pick3":
-                                if (pick3 > 0){
-                                        pick3++;
-                                        return true;
-                                }
-                                else {
-                                        messageBox.innerHTML = "Cannot send back different attack";
-                                        return false;
-                                }
-                        break;
-                        case "skip":
-                                messageBox.innerHTML = "Cannot send SKIP on attack";
-                                return false;
-                        break;
-                        case "cowboy":
-                                messageBox.innerHTML = "not implemented yet..";
-                                return false;
-                        break;
-                        default:
-                        alert("Error Card Type identification...")
-                }        
-
-                messageBox.innerHTML = "Respond to your opponents attack";
-                return false;
+                // Case: Respond attack   
+                if (!respondAttack(type)){
+                        messageBox.innerHTML = "Respond to your opponents attack";
+                        return false;
+                }
         }
         playerTurn = 0;
         return true;
+}
+
+function initAttack(type) {
+        switch(extractType(type)) {
+                case "draw1":
+                        draw1++;
+                        if (!playerTurn){
+                                playerButton.innerHTML = "Draw " + draw1; 
+                        }
+                break;
+                case "draw2":
+                        draw2++;
+                        if (!playerTurn){
+                                playerButton.innerHTML = "Draw " + draw2 * 2; 
+                        }
+                break;
+                case "show":
+                        show++;
+                        if (!playerTurn){
+                                playerButton.innerHTML = "Show "; 
+                        }
+                break;
+                case "yeano":
+                        //Nothing
+                break;
+                case "pick1":
+                        pick1++;
+                        if (!playerTurn){
+                                playerButton.innerHTML = "Pick " + pick1; 
+                        }
+                break;
+                case "pick2":
+                        pick2++;
+                        if (!playerTurn){
+                                playerButton.innerHTML = "Pick " + pick2 * 2; 
+                        }
+                break;
+                case "pick3":
+                        pick3++;
+                        if (!playerTurn){
+                                playerButton.innerHTML = "Pick " + pick3 * 3; 
+                        }
+                break;
+                case "skip":
+                        return false;
+                break;
+                case "cowboy":
+                        //Extra later
+                break;
+                default:
+                alert("Error Card Type identification...")
+        }
+        return true;    
+}
+
+function respondAttack(type) {
+        switch(extractType(type)) {
+                case "draw1":
+                        if (draw1 > 0){
+                                draw1++;
+                                if (!playerTurn){
+                                        playerButton.innerHTML = "Draw " + draw1; 
+                                }
+                                return true;
+                        }
+                        else {
+                                messageBox.innerHTML = "Cannot send back different attack";
+                                return false;
+                        }
+                break;
+                case "draw2":
+                        if (draw2 > 0){
+                                draw2++;
+                                if (!playerTurn){
+                                        playerButton.innerHTML = "Draw " + draw2 * 2; 
+                                }
+                                return true;
+                        }
+                        else {
+                                messageBox.innerHTML = "Cannot send back different attack";
+                                return false;
+                        }
+                break;
+                case "show":
+                        if (show > 0){
+                                show++;
+                                if (!playerTurn){
+                                        playerButton.innerHTML = "Show "; 
+                                }
+                                return true;
+                        }
+                        else {
+                                messageBox.innerHTML = "Cannot send back different attack";
+                                return false;
+                        }
+                break;
+                case "yeano":
+                        draw1 = 0;
+                        draw2 = 0;
+                        show = 0;
+                        pick1 = 0;
+                        pick2 = 0;
+                        pick3 = 0;
+                        if (!playerTurn){
+                                playerButton.innerHTML = "Pick 1"; 
+                        }
+                        return true;
+                break;
+                case "pick1":
+                        if (pick1 > 0){
+                                pick1++;
+                                if (!playerTurn){
+                                        playerButton.innerHTML = "Pick " + pick1; 
+                                }
+                                return true;
+                        }
+                        else {
+                                messageBox.innerHTML = "Cannot send back different attack";
+                                return false;
+                        }
+                break;
+                case "pick2":
+                        if (pick2 > 0){
+                                pick2++;
+                                if (!playerTurn){
+                                        playerButton.innerHTML = "Pick " + pick2 * 2; 
+                                }
+                                return true;
+                        }
+                        else {
+                                messageBox.innerHTML = "Cannot send back different attack";
+                                return false;
+                        }
+                break;
+                case "pick3":
+                        if (pick3 > 0){
+                                pick3++;
+                                if (!playerTurn){
+                                        playerButton.innerHTML = "Pick " + pick3 * 3; 
+                                }
+                                return true;
+                        }
+                        else {
+                                messageBox.innerHTML = "Cannot send back different attack";
+                                return false;
+                        }
+                break;
+                case "skip":
+                        messageBox.innerHTML = "Cannot send SKIP on attack";
+                        return false;
+                break;
+                case "cowboy":
+                        messageBox.innerHTML = "not implemented yet..";
+                        return false;
+                break;
+                default:
+                        alert("Error Card Type identification...")
+                        return false;
+        }        
+}
+
+function printMultiplier() {
+        let sum = (draw1 + draw2 + show + pick1 + pick2 + pick3);
+
+        if (sum > 0) {
+                multiplierBox.innerHTML = "x" + sum;
+        }
+        else {
+                multiplierBox.innerHTML = "0";
+        }
 }
 
 initialize();
