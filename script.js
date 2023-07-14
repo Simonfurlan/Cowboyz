@@ -421,6 +421,14 @@ function decideCpu() {
                 }
 
                 if(!cardFound && (damage >= threasholdCpu)){
+
+                        if (cardContainer.children.length == 0){
+                                PlayerWon = 1;
+                                messageBox.innerHTML = "Player won!";
+                                PlayerWonShow();
+                                return false;
+                        }
+
                         //alert("damage: " + damage + " threashold: " + threasholdCpu);
                         for (let i = 0; i < CpuCards.length; i++) {
                                 if (validateCpu(CpuCards[i])) {
@@ -433,6 +441,14 @@ function decideCpu() {
                 }
 
                 if(!cardFound) {
+
+                        if (cardContainer.children.length == 0){
+                                PlayerWon = 1;
+                                messageBox.innerHTML = "Player won!";
+                                PlayerWonShow();
+                                return false;
+                        }
+
                         // take attack
                         messageBox.innerHTML = "Cpu taking attack";
                         if (show > 0){
