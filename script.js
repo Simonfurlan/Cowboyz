@@ -60,6 +60,7 @@ PlayerShownTrigger = 1;
 
 threasholdCpu = randomBetween(0, 4);
 
+
 let draw1 = 0;
 let draw2 = 0;
 let show = 0;
@@ -401,6 +402,25 @@ function decideCpu() {
                         }
                 }
 
+                if(!cardFound && isDefensive()){
+                        if (cardContainer.children.length == 0){
+                                PlayerWon = 1;
+                                messageBox.innerHTML = "Player won!";
+                                PlayerWonShow();
+                                return false;
+                        }
+
+                        //alert("damage: " + damage + " threashold: " + threasholdCpu);
+                        for (let i = 0; i < CpuCards.length; i++) {
+                                if (validateCpu(CpuCards[i])) {
+                                        respondAttack(CpuCards[i]);
+                                        throwCpu(CpuCards[i]);
+                                        cardFound = 1;
+                                        break;
+                                }
+                        }
+                }
+
                 if(!cardFound) {
                         messageBox.innerHTML = "Cpu picks card";
                         // pick up one
@@ -439,7 +459,7 @@ function decideCpu() {
                                 }
                         }
                 }
-
+                
                 if(!cardFound) {
 
                         if (cardContainer.children.length == 0){
@@ -469,6 +489,18 @@ function decideCpu() {
         playerTurn = 1;
 
         console.log(CpuCards);
+}
+
+function isDefensive(){
+        for (let i = 0; i < CpuCards.length; i++) {
+                if(CpuCards[i].includes("yeano") || CpuCards[i].includes("cowboy")){
+                        
+                }
+                else{
+                        return false;
+                }
+        }
+        return true;
 }
 
 function calculateDamage(){
