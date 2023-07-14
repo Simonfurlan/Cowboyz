@@ -251,7 +251,14 @@ function pickCardCpuShow(type) {
         card.setAttribute('id', type);
         card.style.backgroundImage = `url(${type}.png)`;
         cardContainerCpu.appendChild(card);
-        CpuCards.push(type);
+}
+
+function pickCardCpuHide(type) {
+        const card = document.createElement('div');
+        card.classList.add('card-cpu');
+        card.setAttribute('id', type);
+        card.style.backgroundImage = `url(back.png)`;
+        cardContainerCpu.appendChild(card);
 }
 
 function throwCard(type) {
@@ -428,8 +435,17 @@ function decideCpu() {
                 if(!cardFound) {
                         // take attack
                         messageBox.innerHTML = "Cpu taking attack";
-                        takeAttackCpu();
-                        setTimeout(() => {decideCpu()}, 2000); //After taking, cpus turn
+                        if (show > 0){
+                                takeAttackCpu();
+                                setTimeout(() => {
+                                        hideCardsCpu();
+                                        decideCpu();
+                                }, 4000); //After taking, cpus turn, and show activ
+                        }
+                        else{
+                                takeAttackCpu();
+                                setTimeout(() => {decideCpu()}, 2000); //After taking, cpus turn
+                        }
                         return false;
                 }
                 
@@ -503,7 +519,8 @@ function takeAttackCpu(){
                         draw2 = 0;
                         break;
                 case show > 0:
-                        messageBox.innerHTML = "Cpu has: " + CpuCards;
+                        messageBox.innerHTML = "Cpu presenting cards...";
+                        showCardsCpu();
                         show = 0;
                         break;
                 case pick1 > 0:
@@ -535,7 +552,36 @@ function takeAttackCpu(){
         }
 }
 
+function showCardsCpu(){
+        if((cardContainerCpu.children.length > 0) && (CpuCards.length > 0)){
+                cardsLeft = cardContainerCpu.children.length;
+                for (let i = 0; i < cardsLeft; i++) {
+                        cardContainerCpu.removeChild(cardContainerCpu.lastChild);
+                }
+                for (let i = 0; i < cardsLeft; i++) {
+                        pickCardCpuShow(CpuCards[i]);
+                }
+        }
+        else{
+                alert("Error showCardsCpu function");
+        }
+        
+}
 
+function hideCardsCpu(){
+        if((cardContainerCpu.children.length > 0) && (CpuCards.length > 0)){
+                cardsLeft = cardContainerCpu.children.length;
+                for (let i = 0; i < cardsLeft; i++) {
+                        cardContainerCpu.removeChild(cardContainerCpu.lastChild);
+                }
+                for (let i = 0; i < cardsLeft; i++) {
+                        pickCardCpuHide(CpuCards[i]);
+                }
+        }
+        else{
+                alert("Error hideCardsCpu function");
+        }
+}
 // LOGIC
 
 function initialize(){
