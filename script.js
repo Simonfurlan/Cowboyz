@@ -56,6 +56,10 @@ let playerTurn = 1;
 PlayerWon = 0;
 CpuWon = 0;
 
+PlayerShownTrigger = 1;
+
+threasholdCpu = randomBetween(0, 4);
+
 let draw1 = 0;
 let draw2 = 0;
 let show = 0;
@@ -78,6 +82,34 @@ let Deck = [
 let Pile = new Queue();
 let CpuCards = [];
 
+
+//Cpu Won Function
+
+function CpuWonShow(){
+        //ToDo
+}
+
+//Player Won Function
+
+function PlayerWonShow(){
+        if (!PlayerShownTrigger){
+                return false;
+        }
+        if(PlayerWon && !CpuWon){
+                cardsLeft = cardContainerCpu.children.length;
+                for (let i = 0; i < cardsLeft; i++) {
+                        cardContainerCpu.removeChild(cardContainerCpu.lastChild);
+                }
+                for (let i = 0; i < cardsLeft; i++) {
+                        pickCardCpuShow(CpuCards[i]);
+                }
+                PlayerShownTrigger = 0;
+        }
+        else{
+                alert("Error PlayerWonShow function");
+        }
+}
+
 // Pick and Throw and Draw
 
 function drawFromCpu(amount){
@@ -95,11 +127,13 @@ function drawFromCpu(amount){
                 else{
                         messageBox.innerHTML = "Cpu won!";
                         CpuWon = 1;
+                        CpuWonShow();
                 }
         }
         if (CpuCards.length == 0){
                 messageBox.innerHTML = "Cpu won!";
                 CpuWon = 1;
+                CpuWonShow();
         }
 }
 
@@ -195,6 +229,7 @@ function pickCard(type) {
 
                                 if (cardContainer.children.length == 0){
                                         PlayerWon = 1;
+                                        PlayerWonShow();
                                 }
                         }
                 }
@@ -206,6 +241,15 @@ function pickCardCpu(type) {
         card.classList.add('card-cpu');
         card.setAttribute('id', type);
         card.style.backgroundImage = `url(back.png)`;
+        cardContainerCpu.appendChild(card);
+        CpuCards.push(type);
+}
+
+function pickCardCpuShow(type) {
+        const card = document.createElement('div');
+        card.classList.add('card-cpu');
+        card.setAttribute('id', type);
+        card.style.backgroundImage = `url(${type}.png)`;
         cardContainerCpu.appendChild(card);
         CpuCards.push(type);
 }
@@ -267,6 +311,7 @@ function throwCpu(type) {
                 if (cardContainerCpu.children.length == 0){
                         CpuWon = 1;
                         messageBox.innerHTML = "Cpu won!";
+                        CpuWonShow();
                 }
                 return true;
         }
@@ -302,6 +347,9 @@ function checkRespondCard(type) {
         else if (tmpType.includes("yeano") && checkTime(type)) {
                 return true;
         } 
+        else if (tmpType.includes("cowboy")) {
+                return true;
+        } 
         else {
                 return false;
         }
@@ -325,12 +373,13 @@ function decideCpu() {
                 if (cardContainer.children.length == 0){
                         PlayerWon = 1;
                         messageBox.innerHTML = "Player won!";
+                        PlayerWonShow();
                         return false;
                 }
                 // Case: no attack
                 let cardFound = 0;
                 for (let i = 0; i < CpuCards.length; i++) {
-                        if (checkAttack(CpuCards[i]) && checkTime(CpuCards[i])) {
+                        if (checkAttack(CpuCards[i]) && checkTime(CpuCards[i]) && (!(CpuCards[i].includes("yeano"))) && (!(CpuCards[i].includes("cowboy")))) {
                                 if(!initAttack(CpuCards[i])){
                                         //Case skip
                                         messageBox.innerHTML = "Cpu throws: " + CpuCards[i];
@@ -352,14 +401,27 @@ function decideCpu() {
                 }
         }
         else {
+                let damage = calculateDamage();
                 // Case: respond attack
                 let cardFound = 0;
                 for (let i = 0; i < CpuCards.length; i++) {
-                        if (validateCpu(CpuCards[i])) {
+                        if (validateCpu(CpuCards[i]) && (!(CpuCards[i].includes("yeano"))) && (!(CpuCards[i].includes("cowboy")))) {
                                 respondAttack(CpuCards[i]);
-                                throwCpu(CpuCards[i])
+                                throwCpu(CpuCards[i]);
                                 cardFound = 1;
                                 break;
+                        }
+                }
+
+                if(!cardFound && (damage >= threasholdCpu)){
+                        //alert("damage: " + damage + " threashold: " + threasholdCpu);
+                        for (let i = 0; i < CpuCards.length; i++) {
+                                if (validateCpu(CpuCards[i])) {
+                                        respondAttack(CpuCards[i]);
+                                        throwCpu(CpuCards[i]);
+                                        cardFound = 1;
+                                        break;
+                                }
                         }
                 }
 
@@ -375,6 +437,31 @@ function decideCpu() {
         playerTurn = 1;
 
         console.log(CpuCards);
+}
+
+function calculateDamage(){
+        switch(true) {
+                case draw1 > 0:
+                        if(cardContainer.children.length <= (draw1*2)){
+                                return 10;
+                        }
+                        return draw1 * 2;
+                case draw2 > 0:
+                        if(cardContainer.children.length <= (draw2*2)){
+                                return 10;
+                        }
+                        return draw2 * 2;
+                case show > 0:
+                        return show;
+                case pick1 > 0:
+                        return pick1;
+                case pick2 > 0:
+                        return pick2 * 2;
+                case pick3 > 0:
+                        return pick3 * 3;
+                default:
+                        return 0;
+        }
 }
 
 function randomBetween(min, max) { // min and max included 
@@ -399,6 +486,7 @@ function drawFromPlayer(amount){
                 {
                         messageBox.innerHTML = "Player won!"
                         PlayerWon = 1;
+                        PlayerWonShow();
                 }
         }
         //console.log(CpuCards);
@@ -466,8 +554,29 @@ function initialize(){
         for (let i = 0; i < startAmount; i++) {
                 pickCardCpu(Pile.dequeue());
         }
-        //console.log(CpuCards);
-        //console.log(cardContainerCpu.children.length);
+
+        switch(threasholdCpu) {
+                case 0:
+                        messageBox.innerHTML = "Cpu-status: Defensive";
+                break;
+                case 1:
+                        messageBox.innerHTML = "Cpu-status: Calm";
+                break;
+                case 2:
+                        messageBox.innerHTML = "Cpu-status: Normal";
+                break;
+                case 3:
+                        messageBox.innerHTML = "Cpu-status: Upset";
+                break;
+                case 4:
+                        messageBox.innerHTML = "Cpu-status: Angry";
+                break;
+                default:
+                  alert("Error Cpu anger identification")
+              }
+
+        console.log(CpuCards);
+        console.log("threasholdCpu: " + threasholdCpu);
 }
 
 function checkTime(type) {
