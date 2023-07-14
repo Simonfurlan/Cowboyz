@@ -960,9 +960,9 @@ function printMultiplier() {
 //Startscreen
 var startScreen = document.getElementById('startScreen');
 startScreen.style.visibility = 'visible';
-setTimeout(() => {initialize();}, 100); 
+initialize();
 
-setTimeout(() => {startScreen.style.visibility = 'hidden';}, 1000); 
+setTimeout(() => {startScreen.style.visibility = 'hidden';}, 1500); 
 
 
 
