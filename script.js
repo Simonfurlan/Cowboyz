@@ -228,7 +228,7 @@ function pickCard(type) {
                                 throwCard(type);
                                 cardContainer.removeChild(document.getElementById(type));
 
-                                if (cardContainer.children.length == 0){
+                                if (cardContainer.children.length == 0 && ((draw1 + draw2 + pick1 + pick2 + pick3) == 0)){
                                         PlayerWon = 1;
                                         PlayerWonShow();
                                 }
@@ -316,7 +316,7 @@ function throwCpu(type) {
         if(deleteItemCpu(type)){
                 Pile.enqueue(type);
                 updatePile();
-                if (cardContainerCpu.children.length == 0){
+                if (cardContainerCpu.children.length == 0 && ((draw1 + draw2 + pick1 + pick2 + pick3) == 0)){
                         CpuWon = 1;
                         messageBox.innerHTML = "Cpu won!";
                         CpuWonShow();
@@ -442,7 +442,7 @@ function decideCpu() {
 
                 if(!cardFound && (damage >= threasholdCpu)){
 
-                        if (cardContainer.children.length == 0){
+                        if (cardContainer.children.length == 0 && ((draw1 + draw2 + pick1 + pick2 + pick3) == 0)){
                                 PlayerWon = 1;
                                 messageBox.innerHTML = "Player won!";
                                 PlayerWonShow();
@@ -462,7 +462,7 @@ function decideCpu() {
                 
                 if(!cardFound) {
 
-                        if (cardContainer.children.length == 0){
+                        if (cardContainer.children.length == 0 && ((draw1 + draw2 + pick1 + pick2 + pick3) == 0)){
                                 PlayerWon = 1;
                                 messageBox.innerHTML = "Player won!";
                                 PlayerWonShow();
