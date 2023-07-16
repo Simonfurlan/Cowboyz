@@ -140,6 +140,12 @@ function drawFromCpu(amount){
 
 function playerButtonPressed(){
 
+        if (cardContainerCpu.children.length == 0){
+                        CpuWon = 1;
+                        messageBox.innerHTML = "Cpu won!";
+                        CpuWonShow();
+        }
+
         if (CpuWon || PlayerWon){
                 return false;
         }
@@ -218,12 +224,6 @@ function pickCard(type) {
         card.style.backgroundImage = `url(${type}.png)`;
         cardContainer.appendChild(card);
         card.addEventListener('click', function() {
-
-                if (cardContainerCpu.children.length == 0){
-                        CpuWon = 1;
-                        messageBox.innerHTML = "Cpu won!";
-                        CpuWonShow();
-                }
 
                 if (CpuWon){
                         return false;
