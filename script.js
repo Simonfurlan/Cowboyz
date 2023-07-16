@@ -219,6 +219,12 @@ function pickCard(type) {
         cardContainer.appendChild(card);
         card.addEventListener('click', function() {
 
+                if (cardContainerCpu.children.length == 0){
+                        CpuWon = 1;
+                        messageBox.innerHTML = "Cpu won!";
+                        CpuWonShow();
+                }
+
                 if (CpuWon){
                         return false;
                 }
