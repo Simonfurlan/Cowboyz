@@ -352,7 +352,7 @@ function checkRespondCard(type) {
         else if (pick3 >= 1 && tmpType.includes("pick3") && Pile.peek().includes("pick3")) {
                 return true;
         } 
-        else if (tmpType.includes("yeano") && checkTime(type)) {
+        else if (tmpType.includes("yeano") && checkTime(type) && (!(Pile.peek().includes("yeano")))) {
                 return true;
         } 
         else if (tmpType.includes("cowboy")) {
@@ -983,7 +983,7 @@ function respondAttack(type) {
                                 return true;
                         }
                         else {
-                                alert("Error CowboyCow implementation");
+                                alert("Finished with CowboyCow... Embarassing.");
                         }
                 break;
                 default:
