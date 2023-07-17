@@ -47,6 +47,7 @@ const cardContainerCpu = document.querySelector('.card-container-cpu');
 const pileContainer = document.querySelector('.pile');
 const messageBox = document.querySelector('.console'); 
 const multiplierBox = document.querySelector('.multiplier');
+const preloader = document.querySelector('.preloader');
 const playerButton = document.getElementById('playerBtn');
 playerButton.addEventListener('click', playerButtonPressed);
 
@@ -1009,11 +1010,19 @@ function printMultiplier() {
         }
 }
 
-
+function preLoad() {
+        for (let i = 0; i < Deck.length; i++) {
+                const card = document.createElement('div');
+                card.classList.add('tmp');
+                card.style.backgroundImage = `url(${Deck[i]}.png)`;
+                preloader.appendChild(card);
+        }
+}
 
 //Startscreen
 var startScreen = document.getElementById('startScreen');
-startScreen.style.visibility = 'visible';
+startScreen.style.visibility = 'hidden';
+preLoad();
 initialize();
 
 setTimeout(() => {startScreen.style.visibility = 'hidden';}, 1500); 
