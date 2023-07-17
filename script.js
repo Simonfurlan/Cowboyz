@@ -1021,7 +1021,7 @@ function preLoad() {
 
 //Startscreen
 var startScreen = document.getElementById('startScreen');
-startScreen.style.visibility = 'hidden';
+startScreen.style.visibility = 'visible';
 preLoad();
 initialize();
 
