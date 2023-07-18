@@ -234,17 +234,22 @@ function pickCard(type) {
                         if (cardContainer.children.length > 0) {
                                 
                                 //cardContainer.removeChild(document.getElementById(type));
-    
                                 let node = document.getElementById(type);
                                 if (node.parentNode) {
-                                          let removedTrigger = node.parentNode.removeChild(node);
+                                        try {
+                                                node.parentNode.removeChild(node);
+                                            }
+                                        catch (error) {
+                                                alert("Dom error:" + error);
+                                                return false;
+                                        }
                                 }
                                 else{
                                         alert("Dom error");
                                         return false;
                                 }
 
-                                console.log("removedTrigger: " + removedTrigger);
+                                
 
                                 throwCard(type);
 
@@ -1082,7 +1087,6 @@ preLoad();
 initialize();
 
 setTimeout(() => {startScreen.style.visibility = 'hidden'; bd.removeChild(startScreen)}, 1500); 
-
 
 
 
