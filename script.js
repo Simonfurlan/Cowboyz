@@ -392,6 +392,9 @@ function decideCpu() {
                         return false;
                 }
                 // Case: no attack
+
+                sortCards();
+
                 let cardFound = 0;
                 for (let i = 0; i < CpuCards.length; i++) {
                         if (checkAttack(CpuCards[i]) && checkTime(CpuCards[i]) && (!(CpuCards[i].includes("yeano"))) && (!(CpuCards[i].includes("cowboy")))) {
@@ -497,6 +500,33 @@ function decideCpu() {
 
         console.log(CpuCards);
 }
+
+function sortCards(){
+        CpuCards = sortStrings(CpuCards);
+}
+
+function sortStrings(strings) {
+        const counts = {};
+        for (let i = 0; i < strings.length; i++) {
+          const string = strings[i];
+          const prefix = string.match(/^[a-zA-Z]+\d*/)[0];
+          counts[prefix] = (counts[prefix] || 0) + 1;
+        }
+
+        strings.sort((a, b) => {
+          const prefixA = a.match(/^[a-zA-Z]+\d*/)[0];
+          const prefixB = b.match(/^[a-zA-Z]+\d*/)[0];
+          const countDiff = counts[prefixB] - counts[prefixA];
+          if (countDiff !== 0) {
+            return countDiff;
+          }
+      
+          return a.localeCompare(b);
+        });
+      
+        return strings;
+}
+      
 
 function isDefensive(){
         for (let i = 0; i < CpuCards.length; i++) {
