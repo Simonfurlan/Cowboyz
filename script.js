@@ -232,13 +232,21 @@ function pickCard(type) {
 
                 if (validateTurn(type)){
                         if (cardContainer.children.length > 0) {
-                                throwCard(type);
+                                
                                 //cardContainer.removeChild(document.getElementById(type));
     
-                                setTimeout(function(){ 
-                                        var myCoolDiv = document.getElementById(type);
-                                        document.getElementById("cardContainer").removeChild(myCoolDiv);
-                                }, 25);
+                                let node = document.getElementById(type);
+                                if (node.parentNode) {
+                                          let removedTrigger = node.parentNode.removeChild(node);
+                                }
+                                else{
+                                        alert("Dom error");
+                                        return false;
+                                }
+
+                                console.log("removedTrigger: " + removedTrigger);
+
+                                throwCard(type);
 
                                 if (cardContainer.children.length == 0 && ((draw1 + draw2 + pick1 + pick2 + pick3) == 0)){
                                         PlayerWon = 1;
