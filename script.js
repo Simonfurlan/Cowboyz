@@ -1068,11 +1068,12 @@ function preLoad() {
 
 //Startscreen
 var startScreen = document.getElementById('startScreen');
+var bd = document.body;
 startScreen.style.visibility = 'visible';
 preLoad();
 initialize();
 
-setTimeout(() => {startScreen.style.visibility = 'hidden';}, 1500); 
+setTimeout(() => {startScreen.style.visibility = 'hidden'; bd.removeChild(startScreen)}, 1500); 
 
 
 
