@@ -233,7 +233,12 @@ function pickCard(type) {
                 if (validateTurn(type)){
                         if (cardContainer.children.length > 0) {
                                 throwCard(type);
-                                cardContainer.removeChild(document.getElementById(type));
+                                //cardContainer.removeChild(document.getElementById(type));
+    
+                                setTimeout(function(){ 
+                                        var myCoolDiv = document.getElementById(type);
+                                        document.getElementById("cardContainer").removeChild(myCoolDiv);
+                                }, 25);
 
                                 if (cardContainer.children.length == 0 && ((draw1 + draw2 + pick1 + pick2 + pick3) == 0)){
                                         PlayerWon = 1;
@@ -768,6 +773,12 @@ function checkAttack(type) {
         }
 
         if (tmpType.includes("yeano") && (!(Pile.peek().includes("yeano")))){
+                if (cardContainer.children.length == 0 && ((draw1 + draw2 + pick1 + pick2 + pick3) == 0) && !playerTurn){
+                        PlayerWon = 1;
+                        messageBox.innerHTML = "Player won!";
+                        PlayerWonShow();
+                        return false;
+                }
                 return true;
         }
 
@@ -930,6 +941,12 @@ function respondAttack(type) {
                         pick3 = 0;
                         if (!playerTurn){
                                 playerButton.innerHTML = "Pick 1"; 
+                        }
+                        if (cardContainer.children.length == 0 && ((draw1 + draw2 + pick1 + pick2 + pick3) == 0) && !playerTurn){
+                                PlayerWon = 1;
+                                messageBox.innerHTML = "Player won!";
+                                PlayerWonShow();
+                                return false;
                         }
                         return true;
                 break;
