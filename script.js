@@ -49,7 +49,9 @@ const messageBox = document.querySelector('.console');
 const multiplierBox = document.querySelector('.multiplier');
 const preloader = document.querySelector('.preloader');
 const playerButton = document.getElementById('playerBtn');
+const statsButton = document.getElementById('statsBoard');
 playerButton.addEventListener('click', playerButtonPressed);
+statsButton.addEventListener('click', statsButtonPressed);
 
 const startAmount = 5;
 
@@ -85,10 +87,32 @@ let Pile = new Queue();
 let CpuCards = [];
 
 
+function statsButtonPressed(){
+        
+        winns = localStorage.getItem("wonAmount");
+        if (winns == null){
+                winns = 0;
+        }
+
+        loses = localStorage.getItem("lostAmount");
+        if (loses == null){
+                loses = 0;
+        }
+
+        alert("Won: " + winns +"\nLost: " + loses);
+}
+
 //Cpu Won Function
 
 function CpuWonShow(){
         //ToDo
+        //Updating Board
+        let vartmp = localStorage.getItem("lostAmount")
+        if(vartmp >= 1){
+                localStorage.setItem("lostAmount", vartmp+1);
+        }else{
+                localStorage.setItem("lostAmount", 1);
+        }
 }
 
 //Player Won Function
@@ -106,6 +130,14 @@ function PlayerWonShow(){
                         pickCardCpuShow(CpuCards[i]);
                 }
                 PlayerShownTrigger = 0;
+
+                //Updating Board
+                let vartmp = localStorage.getItem("wonAmount")
+                if(vartmp >= 1){
+                        localStorage.setItem("wonAmount", vartmp+1);
+                }else{
+                        localStorage.setItem("wonAmount", 1);
+                }
         }
         else{
                 alert("Error PlayerWonShow function");
