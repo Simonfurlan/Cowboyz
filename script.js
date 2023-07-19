@@ -60,8 +60,23 @@ PlayerWon = 0;
 CpuWon = 0;
 
 PlayerShownTrigger = 1;
+CpuCountTrigger = 1;
 
-threasholdCpu = randomBetween(0, 4);
+threasholdCpu = gaussianRandom(-1, 5);
+
+function gaussianRand() {
+        var rand = 0;
+      
+        for (var i = 0; i < 6; i += 1) {
+          rand += Math.random();
+        }
+      
+        return rand / 6;
+}
+
+function gaussianRandom(start, end) {
+        return Math.floor(start + gaussianRand() * (end - start + 1));
+}
 
 
 let draw1 = 0;
@@ -89,17 +104,17 @@ let CpuCards = [];
 
 function statsButtonPressed(){
         
-        winns = localStorage.getItem("wonAmount");
+        winns = localStorage.getItem("gamesWon");
         if (winns == null){
                 winns = 0;
         }
 
-        loses = localStorage.getItem("lostAmount");
+        loses = localStorage.getItem("gamesLost");
         if (loses == null){
                 loses = 0;
         }
 
-        alert("Won: " + winns +"\nLost: " + loses);
+        alert("Total games won: " + winns +"\nTotal games lost: " + loses + "\nWinning rate: " + Math.floor(parseInt(winns)/(parseInt(winns)+parseInt(loses))* 100) + "%");
 }
 
 //Cpu Won Function
@@ -107,12 +122,15 @@ function statsButtonPressed(){
 function CpuWonShow(){
         //ToDo
         //Updating Board
-        let vartmp = localStorage.getItem("lostAmount")
-        if(vartmp >= 1){
-                localStorage.setItem("lostAmount", vartmp+1);
-        }else{
-                localStorage.setItem("lostAmount", 1);
+        if(CpuCountTrigger){
+                let vartmp = localStorage.getItem("gamesLost")
+                if(vartmp >= 1){
+                        localStorage.setItem("gamesLost", parseInt(vartmp) + 1);
+                }else{
+                        localStorage.setItem("gamesLost", 1);
+                }
         }
+        CpuCountTrigger = 0;
 }
 
 //Player Won Function
@@ -132,11 +150,11 @@ function PlayerWonShow(){
                 PlayerShownTrigger = 0;
 
                 //Updating Board
-                let vartmp = localStorage.getItem("wonAmount")
+                let vartmp = localStorage.getItem("gamesWon")
                 if(vartmp >= 1){
-                        localStorage.setItem("wonAmount", vartmp+1);
+                        localStorage.setItem("gamesWon", parseInt(vartmp) + 1);
                 }else{
-                        localStorage.setItem("wonAmount", 1);
+                        localStorage.setItem("gamesWon", 1);
                 }
         }
         else{
@@ -265,6 +283,7 @@ function pickCard(type) {
                 if (validateTurn(type)){
                         if (cardContainer.children.length > 0) {
                                 
+                                priorCards = cardContainer.children.length;
                                 //cardContainer.removeChild(document.getElementById(type));
                                 let node = document.getElementById(type);
                                 if (node.parentNode) {
@@ -281,9 +300,16 @@ function pickCard(type) {
                                         return false;
                                 }
 
-                                
+                                afterCards = cardContainer.children.length;
 
-                                throwCard(type);
+                                if(priorCards == (afterCards + 1)){
+                                        throwCard(type);
+                                }
+                                else{
+                                        console.log("Thrown card missmatch, try again...")
+                                }
+
+                                
 
                                 if (cardContainer.children.length == 0 && ((draw1 + draw2 + pick1 + pick2 + pick3) == 0)){
                                         PlayerWon = 1;
