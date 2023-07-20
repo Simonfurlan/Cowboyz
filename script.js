@@ -132,6 +132,7 @@ function CpuWonShow(){
         }
         CpuCountTrigger = 0;
         lostScreen.style.visibility = 'visible';
+        rematchButton.style.visibility = 'visible';
 }
 
 //Player Won Function
@@ -163,7 +164,7 @@ function PlayerWonShow(){
         }
         wonScreen.style.visibility = 'visible';
         startConfetti();
-        setTimeout(() => {stopConfetti()}, 2000);
+        setTimeout(() => {stopConfetti(); rematchButton.style.visibility = 'visible';}, 2000);
 }
 
 // Pick and Throw and Draw
@@ -312,8 +313,6 @@ function pickCard(type) {
                                 else{
                                         console.log("Thrown card missmatch, try again...")
                                 }
-
-                                
 
                                 if (cardContainer.children.length == 0 && ((draw1 + draw2 + pick1 + pick2 + pick3) == 0)){
                                         PlayerWon = 1;
@@ -1145,6 +1144,7 @@ function preLoad() {
 var startScreen = document.getElementById('startScreen');
 var wonScreen = document.getElementById('wonScreen');
 var lostScreen = document.getElementById('lostScreen');
+var rematchButton = document.getElementById('rematchButton');
 var bd = document.body;
 startScreen.style.visibility = 'visible';
 preLoad();

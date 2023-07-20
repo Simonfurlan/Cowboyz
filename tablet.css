@@ -41,8 +41,6 @@ body{
     flex-wrap: wrap;
     top: 60%;
     width: 115%;
-    backdrop-filter: blur(50px);
-    -webkit-backdrop-filter: blur(50px);
     z-index: 2;
     scale: 0.8;
 }
@@ -126,4 +124,46 @@ body{
     margin: 0;
     z-index: 3;
     text-align: center;
+}
+
+#wonScreen {
+    height: -webkit-fill-available; 
+    width: -webkit-fill-available; 
+    -webkit-backdrop-filter: blur(10px); 
+    backdrop-filter: blur(10px); 
+    z-index: 3; 
+    visibility: hidden; 
+    margin: 0; 
+    position:fixed; 
+    text-align: center;
+}
+
+#lostScreen {
+    height: -webkit-fill-available; 
+    width: -webkit-fill-available; 
+    -webkit-backdrop-filter: blur(10px); 
+    backdrop-filter: blur(10px); 
+    z-index: 3; 
+    visibility: hidden; 
+    margin: 0; 
+    position:fixed; 
+    text-align: center;
+}
+
+.wonLostText {
+    text-align: center;
+    font-size: 190%; 
+    top: 55%; 
+    position: relative; 
+    font-family: sans-serif; 
+    font-weight: 700; 
+    text-shadow: 3px 0 #fff, -3px 0 #fff, 0 3px #fff, 0 -3px #fff, 2px 2px #fff, -2px -2px #fff, 2px -2px #fff, -2px 2px #fff;
+}
+
+.wonLostPic {
+    height: 35%;
+    position: relative;
+    top: 18%;
+    margin-left: 50px;
+    margin-right: 50px;
 }
