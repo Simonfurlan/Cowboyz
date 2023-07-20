@@ -47,6 +47,7 @@ html, body {
     top: 60%;
     width: 100%;
     backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(50px);
     z-index: 2;
 }
   
