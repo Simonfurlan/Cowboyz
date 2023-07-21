@@ -162,8 +162,8 @@ function PlayerWonShow(){
         else{
                 alert("Error PlayerWonShow function");
         }
-	setTimeout(() => {wonScreen.style.visibility = 'visible'; startConfetti();}, 2000);
-        setTimeout(() => {stopConfetti(); rematchButton.style.visibility = 'visible';}, 3500);
+	setTimeout(() => {wonScreen.style.visibility = 'visible'; startConfetti();}, 3000);
+        setTimeout(() => {stopConfetti(); rematchButton.style.visibility = 'visible';}, 4000);
 }
 
 // Pick and Throw and Draw
