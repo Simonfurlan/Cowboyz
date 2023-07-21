@@ -131,8 +131,8 @@ function CpuWonShow(){
                 }
         }
         CpuCountTrigger = 0;
-        lostScreen.style.visibility = 'visible';
-        rematchButton.style.visibility = 'visible';
+	setTimeout(() => {lostScreen.style.visibility = 'visible';rematchButton.style.visibility = 'visible'; }, 2000);
+        
 }
 
 //Player Won Function
@@ -162,9 +162,8 @@ function PlayerWonShow(){
         else{
                 alert("Error PlayerWonShow function");
         }
-        wonScreen.style.visibility = 'visible';
-        startConfetti();
-        setTimeout(() => {stopConfetti(); rematchButton.style.visibility = 'visible';}, 2000);
+	setTimeout(() => {wonScreen.style.visibility = 'visible'; startConfetti();}, 2000);
+        setTimeout(() => {stopConfetti(); rematchButton.style.visibility = 'visible';}, 3500);
 }
 
 // Pick and Throw and Draw
